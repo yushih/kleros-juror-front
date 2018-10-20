@@ -2,6 +2,7 @@ import React, { PureComponent } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { RenderIf } from 'lessdux'
+import ReactModal from 'react-modal'
 
 import { ChainData } from '../../chainstrap'
 import { ARBITRATOR_ADDRESS, networkID } from '../../bootstrap/dapp-api'
@@ -37,6 +38,11 @@ import {
   WithdrawPNKFormIsInvalid,
   submitWithdrawPNKForm
 } from './components/withdraw-pnk-form'
+import {
+  BuyPNKFromBondingCurveForm,
+  buyPNKFromBondingCurveFormIsInvalid,
+  submitBuyPNKFromBondingCurveForm
+} from './components/bonding-curve-form'
 
 import './tokens.css'
 
@@ -71,7 +77,15 @@ class Tokens extends PureComponent {
 
     // passPeriodForm
     passPeriodFormIsInvalid: PropTypes.bool.isRequired,
-    submitPassPeriodForm: PropTypes.func.isRequired
+    submitPassPeriodForm: PropTypes.func.isRequired,
+
+    // buyPNKFromBondingCurveForm
+    buyPNKFromBondingCurveFormIsInvalid: PropTypes.bool.isRequired,
+    submitBuyPNKFromBondingCurveForm: PropTypes.func.isRequired
+  }
+
+  state = {
+    showBondingCurveForm: false
   }
 
   componentDidMount() {
@@ -123,6 +137,16 @@ class Tokens extends PureComponent {
     buyPNK(decimalStringToWeiBN(amount).toString())
   }
 
+  handleOpenBondingCurveForm = event => {
+    this.setState({ showBondingCurveForm: true })
+    event.preventDefault()
+  }
+
+  handleCloseBondingCurveForm = event => {
+    this.setState({ showBondingCurveForm: false })
+    event.preventDefault()
+  }
+
   render() {
     const {
       accounts,
@@ -151,7 +175,39 @@ class Tokens extends PureComponent {
     }
 
     const forms = [
-      <div key={0}>
+      <div key={0} className="modalParent">
+        <ReactModal
+          isOpen={this.state.showBondingCurveForm}
+          parentSelector={() => document.querySelector('.modalParent')}
+        >
+          <div
+            onClick={this.handleCloseBondingCurveForm}
+            className="Modal-dismiss"
+          >
+            &times;
+          </div>
+          <BuyPNKFromBondingCurveForm
+            enableReinitialize //?
+            keepDirtyOnReinitialize
+            initialValues={null}
+            onSubmit={this.handleBuyPNKFromBondingCurveForm}
+          />
+          <Button
+            onClick={submitBuyPNKForm}
+            disabled={buyPNKFormIsInvalid}
+            className="Tokens-form-button"
+          >
+            <ChainData
+              contractName={chainViewConstants.KLEROS_POC_NAME}
+              contractAddress={ARBITRATOR_ADDRESS}
+              functionSignature={chainViewConstants.KLEROS_POC_BUY_PINAKION_SIG}
+              parameters={chainViewConstants.KLEROS_POC_BUY_PINAKION_PARAMS()}
+              estimatedGas={chainViewConstants.KLEROS_POC_BUY_PINAKION_GAS}
+            >
+              BUY NOW
+            </ChainData>
+          </Button>
+        </ReactModal>
         <TransferPNKForm
           enableReinitialize
           keepDirtyOnReinitialize
@@ -164,7 +220,11 @@ class Tokens extends PureComponent {
                 <br />
                 <br />
                 <small>
-                  If you don't have PNK, you can buy some on{' '}
+                  If you don't have PNK, you can buy some{' '}
+                  <a onClick={this.handleOpenBondingCurveForm.bind(this)}>
+                    here
+                  </a>{' '}
+                  or from{' '}
                   <a
                     href="https://idex.market/eth/pnk"
                     target="_blank"

@@ -94,6 +94,7 @@
     "react-dom": "^16.2.0",
     "react-helmet": "^5.2.0",
     "react-minimal-pie-chart": "^3.0.1",
+    "react-model": "^0.0.0",
     "react-redux": "^5.0.6",
     "react-redux-toastr": "^7.2.0",
     "react-router-dom": "^4.2.2",

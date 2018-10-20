@@ -23,3 +23,28 @@
     }
   }
 }
+
+
+
+.Modal {
+  &-dismiss {
+    $size: 24px;
+
+    position: absolute;
+    right: 12px;
+    top: 10px;
+
+    border: 1px solid #cccccc;
+
+    height: $size;
+    width: $size;
+    font-size: $size;
+
+    text-align: center;
+    line-height: $size; // vertically center
+
+    &:hover {
+      background-color: #cccccc;
+    }
+  }
+}
