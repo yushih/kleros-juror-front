@@ -14,7 +14,7 @@ else if (window.web3 && window.web3.currentProvider)
   eth = new Eth(window.web3.currentProvider)
 else eth = new Eth(new Eth.HttpProvider(ETHEREUM_PROVIDER))
 
-let ARBITRATOR_ADDRESS
+let ARBITRATOR_ADDRESS, BONDING_CURVE_ADDRESS
 let kleros
 let networkID
 const initializeKleros = async () => {
@@ -27,7 +27,14 @@ const initializeKleros = async () => {
       }_ARBITRATOR_ADDRESS`
     ]
 
-  kleros = new Kleros(eth.currentProvider, STORE_PROVIDER, ARBITRATOR_ADDRESS)
+  BONDING_CURVE_ADDRESS = 
+    process.env[
+      `REACT_APP_${env}_${
+        ethConstants.NETWORK_MAP[networkID]
+      }_BONDING_CURVE_ADDRESS`
+    ]
+
+  kleros = new Kleros(eth.currentProvider, STORE_PROVIDER, ARBITRATOR_ADDRESS, undefined, BONDING_CURVE_ADDRESS)
 }
 
 const ETHAddressRegExpCaptureGroup = '(0x[a-fA-F0-9]{40})'
@@ -37,6 +44,7 @@ const strictETHAddressRegExp = /^0x[a-fA-F0-9]{40}$/
 export {
   eth,
   ARBITRATOR_ADDRESS,
+  BONDING_CURVE_ADDRESS,
   kleros,
   initializeKleros,
   ETHAddressRegExpCaptureGroup,

@@ -3,7 +3,7 @@ import { required, number } from '../../../../utils/validation'
 
 export const {
   Form: BuyPNKFromBondingCurveForm,
-  isInvalid: buyPNKFromBondingCurveFormIsInvalid,
+  isInvalid: getBuyPNKFromBondingCurveFormIsInvalid,
   submit: submitBuyPNKFromBondingCurveForm
 } = form('buyPNKFromBondingCurveForm', {
   header: {
