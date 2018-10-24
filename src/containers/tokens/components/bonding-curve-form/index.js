@@ -1,5 +1,5 @@
 import { form } from '../../../../utils/form-generator'
-import { required, number } from '../../../../utils/validation'
+import { required, number, positiveNumber } from '../../../../utils/validation'
 
 export const {
   Form: BuyPNKFromBondingCurveForm,
@@ -10,15 +10,16 @@ export const {
     type: 'header',
     props: { title: 'BUY PNK' }
   },
-  rate: {
+  explanation: {
     type: 'info'
   },
-  amount: {
+  amountOfETH: {
     type: 'text',
-    validate: [required, number],
+    validate: [required, number, positiveNumber],
     props: {
       type: 'number',
       className: 'Form-noMargins'
     }
-  }
+  },
+  
 })

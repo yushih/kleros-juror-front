@@ -149,8 +149,8 @@ class Tokens extends PureComponent {
 
   handleBuyPNKFromBondingCurveForm = formData => {
     const { buyPNKFromBondingCurve } = this.props
-    //const {eth,minPnk } = formData
-    buyPNKFromBondingCurve()
+    const { amountOfETH } = formData
+    buyPNKFromBondingCurve(decimalStringToWeiBN(amountOfETH).toString())
   }
 
   handleOpenBondingCurveForm = event => {
@@ -208,7 +208,13 @@ class Tokens extends PureComponent {
           <BuyPNKFromBondingCurveForm
             enableReinitialize 
             keepDirtyOnReinitialize
-            initialValues={null}
+            initialValues={{
+              explanation: (
+                <span>
+                  The amount of Ether you'd like to spend:
+                </span>
+              )
+            }}
             onSubmit={this.handleBuyPNKFromBondingCurveForm}
             validate={this.validateBuyPNKFromBondingCurveForm}
           />

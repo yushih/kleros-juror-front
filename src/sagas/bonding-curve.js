@@ -1,6 +1,7 @@
 import { takeLatest, call, select } from 'redux-saga/effects'
 
 import * as bondingCurveActions from '../actions/bonding-curve'
+import * as walletSelectors from '../reducers/wallet'
 import { kleros } from '../bootstrap/dapp-api'
 import { lessduxSaga } from '../utils/saga'
 
@@ -8,13 +9,19 @@ import { lessduxSaga } from '../utils/saga'
 function *fetchBondingCurveTotals() {
   return {
     totalETH: yield call(kleros.bondingCurve.getTotalETH),
-    totalPNK: yield call(kleros.bondingCurve.getTotalTKN)
+    totalPNK: yield call(kleros.bondingCurve.getTotalTKN),
+    spread: yield call(kleros.bondingCurve.getSpread)
   }
 }
 
-function *buyPNKFromBondingCurve() {
+function *buyPNKFromBondingCurve({payload: { amount } }) {
+  const addr = yield select(walletSelectors.getAccount)
   return yield call(
-    kleros.bondingCurve.buyPNK
+    kleros.bondingCurve.buy,
+    addr,
+    0, //todo
+    amount,
+    addr
   )
 }
 

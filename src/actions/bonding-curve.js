@@ -9,9 +9,9 @@ export const bondingCurve = {
 
 /* Action Creators */
 
-export const buyPNKFromBondingCurve = ()=> ({
+export const buyPNKFromBondingCurve = amount => ({
   type: bondingCurve.BUY_PNK_FROM_BONDING_CURVE,
-  payload: { }
+  payload: { amount }
 })
 export const fetchBondingCurveData = () => ({ 
   type: bondingCurve.FETCH 
