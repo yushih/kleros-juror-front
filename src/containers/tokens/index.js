@@ -45,6 +45,11 @@ import {
   getBuyPNKFromBondingCurveFormIsInvalid,
   submitBuyPNKFromBondingCurveForm
 } from './components/bonding-curve-form'
+import {
+  SellPNKToBondingCurveForm,
+  getSellPNKToBondingCurveFormIsInvalid,
+  submitSellPNKToBondingCurveForm
+} from './components/bonding-curve-form'
 
 import './tokens.css'
 
@@ -66,6 +71,7 @@ class Tokens extends PureComponent {
     transferPNK: PropTypes.func.isRequired,
     withdrawPNK: PropTypes.func.isRequired,
     buyPNKFromBondingCurve: PropTypes.func.isRequired,
+    sellPNKToBondingCurve: PropTypes.func.isRequired,
     fetchBondingCurveData: PropTypes.func.isRequired,
 
     // Transfer PNK
@@ -86,7 +92,11 @@ class Tokens extends PureComponent {
 
     // buyPNKFromBondingCurveForm
     buyPNKFromBondingCurveFormIsInvalid: PropTypes.bool.isRequired,
-    submitBuyPNKFromBondingCurveForm: PropTypes.func.isRequired
+    submitBuyPNKFromBondingCurveForm: PropTypes.func.isRequired,
+
+    // sellPNKToBondingCurveForm
+    sellPNKToBondingCurveFormIsInvalid: PropTypes.bool.isRequired,
+    submitSellPNKToBondingCurveForm: PropTypes.func.isRequired
   }
 
   state = {
@@ -129,6 +139,10 @@ class Tokens extends PureComponent {
     return {}
   }
 
+  validateSellPNKToBondingCurveForm = values => {
+    return {}
+  }
+
   handleWithdrawPNKFormSubmit = formData => {
     const { withdrawPNK } = this.props
     const { amount } = formData
@@ -151,6 +165,12 @@ class Tokens extends PureComponent {
     const { buyPNKFromBondingCurve } = this.props
     const { amountOfETH } = formData
     buyPNKFromBondingCurve(decimalStringToWeiBN(amountOfETH).toString())
+  }
+
+  handleSellPNKToBondingCurveForm = formData => {
+    const { sellPNKToBondingCurve } = this.props
+    const { amountOfPNK } = formData
+    sellPNKToBondingCurve(decimalStringToWeiBN(amountOfPNK).toString())
   }
 
   handleOpenBondingCurveForm = event => {
@@ -180,7 +200,9 @@ class Tokens extends PureComponent {
       submitWithdrawPNKForm,
       bondingCurveTotals,
       buyPNKFromBondingCurveFormIsInvalid,
-      submitBuyPNKFromBondingCurveForm
+      submitBuyPNKFromBondingCurveForm,
+      sellPNKToBondingCurveFormIsInvalid,
+      submitSellPNKToBondingCurveForm
     } = this.props
 
     if (!PNKBalance.data || !arbitratorData.data) return null
@@ -211,7 +233,7 @@ class Tokens extends PureComponent {
             initialValues={{
               explanation: (
                 <span>
-                  The amount of Ether you'd like to spend:
+                  The amount of ETH you'd like to spend:
                 </span>
               )
             }}
@@ -225,6 +247,26 @@ class Tokens extends PureComponent {
             className="Tokens-form-button"
           >
             BUY NOW
+          </Button>
+          <SellPNKToBondingCurveForm
+            enableReinitialize 
+            keepDirtyOnReinitialize
+            initialValues={{
+              explanation: (
+                <span>
+                  The amount of PNK you'd like to sell:
+                </span>
+              )
+            }}
+            onSubmit={this.handleSellPNKToBondingCurveForm}
+            validate={this.validateSellPNKToBondingCurveForm}
+          />
+          <Button
+            onClick={submitSellPNKToBondingCurveForm}
+            disabled={sellPNKToBondingCurveFormIsInvalid}
+            className="Tokens-form-button"
+          >
+            SELL NOW
           </Button>
         </ReactModal>
         <TransferPNKForm
@@ -435,7 +477,8 @@ export default connect(
     passPeriodFormIsInvalid: getPassPeriodFormIsInvalid(state),
     transferPNKFormIsInvalid: TransferPNKFormIsInvalid(state),
     withdrawPNKFormIsInvalid: WithdrawPNKFormIsInvalid(state),
-    buyPNKFromBondingCurveFormIsInvalid: getBuyPNKFromBondingCurveFormIsInvalid(state)
+    buyPNKFromBondingCurveFormIsInvalid: getBuyPNKFromBondingCurveFormIsInvalid(state),
+    sellPNKToBondingCurveFormIsInvalid: getSellPNKToBondingCurveFormIsInvalid(state)
   }),
   {
     fetchBalance: walletActions.fetchBalance,
@@ -446,11 +489,13 @@ export default connect(
     transferPNK: arbitratorActions.transferPNK,
     withdrawPNK: arbitratorActions.withdrawPNK,
     buyPNKFromBondingCurve: bondingCurveActions.buyPNKFromBondingCurve,
+    sellPNKToBondingCurve: bondingCurveActions.sellPNKToBondingCurve,
     fetchBondingCurveData: bondingCurveActions.fetchBondingCurveData,
     submitBuyPNKForm,
     submitPassPeriodForm,
     submitTransferPNKForm,
     submitWithdrawPNKForm,
-    submitBuyPNKFromBondingCurveForm
+    submitBuyPNKFromBondingCurveForm,
+    submitSellPNKToBondingCurveForm
   }
 )(Tokens)

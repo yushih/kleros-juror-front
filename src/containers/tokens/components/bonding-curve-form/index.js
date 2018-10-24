@@ -23,3 +23,26 @@ export const {
   },
   
 })
+
+export const {
+  Form: SellPNKToBondingCurveForm,
+  isInvalid: getSellPNKToBondingCurveFormIsInvalid,
+  submit: submitSellPNKToBondingCurveForm
+} = form('sellPNKToBondingCurveForm', {
+  header: {
+    type: 'header',
+    props: { title: 'SELL PNK' }
+  },
+  explanation: {
+    type: 'info'
+  },
+  amountOfPNK: {
+    type: 'text',
+    validate: [required, number, positiveNumber],
+    props: {
+      type: 'number',
+      className: 'Form-noMargins'
+    }
+  },
+  
+})

@@ -25,6 +25,17 @@ function *buyPNKFromBondingCurve({payload: { amount } }) {
   )
 }
 
+function *sellPNKToBondingCurve({payload: { amount } }) {
+  const addr = yield select(walletSelectors.getAccount)
+  return yield call(
+    kleros.bondingCurve.sell,
+    amount,
+    addr,
+    0, //todo
+    addr
+  )
+}
+
 /**
  * The root of the bonding curve saga.
  */
@@ -37,10 +48,17 @@ export default function* bondingCurveSaga() {
     fetchBondingCurveTotals
   )
   yield takeLatest(
-    bondingCurveActions.bondingCurve.BUY_PNK_FROM_BONDING_CURVE,
+    bondingCurveActions.bondingCurve.BUY_PNK,
     lessduxSaga,
     'update',
     bondingCurveActions.bondingCurve,
     buyPNKFromBondingCurve
+  )
+  yield takeLatest(
+    bondingCurveActions.bondingCurve.SELL_PNK,
+    lessduxSaga,
+    'update',
+    bondingCurveActions.bondingCurve,
+    sellPNKToBondingCurve
   )
 }
