@@ -215,9 +215,54 @@ class Tokens extends PureComponent {
       withdrawInvalid = false
     }
 
+    const bondingCurveForm = <div>
+      <BuyPNKFromBondingCurveForm
+        enableReinitialize 
+        keepDirtyOnReinitialize
+        initialValues={{
+          explanation: (
+            <span>
+              The amount of ETH you'd like to spend:
+            </span>
+          )
+        }}
+        onSubmit={this.handleBuyPNKFromBondingCurveForm}
+        validate={this.validateBuyPNKFromBondingCurveForm}
+      />
+        bonding curve: {JSON.stringify(bondingCurveTotals)}
+      <Button
+        onClick={submitBuyPNKFromBondingCurveForm}
+        disabled={buyPNKFromBondingCurveFormIsInvalid}
+        className="Tokens-form-button"
+      >
+        BUY NOW
+      </Button>
+      <SellPNKToBondingCurveForm
+        enableReinitialize 
+        keepDirtyOnReinitialize
+        initialValues={{
+          explanation: (
+            <span>
+              The amount of PNK you'd like to sell:
+            </span>
+          )
+        }}
+        onSubmit={this.handleSellPNKToBondingCurveForm}
+        validate={this.validateSellPNKToBondingCurveForm}
+      />
+      <Button
+        onClick={submitSellPNKToBondingCurveForm}
+        disabled={sellPNKToBondingCurveFormIsInvalid}
+        className="Tokens-form-button"
+      >
+        SELL NOW
+      </Button> 
+    </div>
+
     const forms = [
       <div key={0} className="modalParent">
         <ReactModal
+          ariaHideApp={false}
           isOpen={this.state.showBondingCurveForm}
           parentSelector={() => document.querySelector('.modalParent')}
         >
@@ -227,47 +272,11 @@ class Tokens extends PureComponent {
           >
             &times;
           </div>
-          <BuyPNKFromBondingCurveForm
-            enableReinitialize 
-            keepDirtyOnReinitialize
-            initialValues={{
-              explanation: (
-                <span>
-                  The amount of ETH you'd like to spend:
-                </span>
-              )
-            }}
-            onSubmit={this.handleBuyPNKFromBondingCurveForm}
-            validate={this.validateBuyPNKFromBondingCurveForm}
-          />
-            bonding curve: {JSON.stringify(bondingCurveTotals)}
-          <Button
-            onClick={submitBuyPNKFromBondingCurveForm}
-            disabled={buyPNKFromBondingCurveFormIsInvalid}
-            className="Tokens-form-button"
-          >
-            BUY NOW
-          </Button>
-          <SellPNKToBondingCurveForm
-            enableReinitialize 
-            keepDirtyOnReinitialize
-            initialValues={{
-              explanation: (
-                <span>
-                  The amount of PNK you'd like to sell:
-                </span>
-              )
-            }}
-            onSubmit={this.handleSellPNKToBondingCurveForm}
-            validate={this.validateSellPNKToBondingCurveForm}
-          />
-          <Button
-            onClick={submitSellPNKToBondingCurveForm}
-            disabled={sellPNKToBondingCurveFormIsInvalid}
-            className="Tokens-form-button"
-          >
-            SELL NOW
-          </Button>
+          <RenderIf
+            resource={bondingCurveTotals}
+            loading={<Icosahedron />}
+            done={bondingCurveForm} 
+          /> 
         </ReactModal>
         <TransferPNKForm
           enableReinitialize

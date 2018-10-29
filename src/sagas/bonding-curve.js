@@ -16,24 +16,26 @@ function *fetchBondingCurveTotals() {
 
 function *buyPNKFromBondingCurve({payload: { amount } }) {
   const addr = yield select(walletSelectors.getAccount)
-  return yield call(
+  yield call(
     kleros.bondingCurve.buy,
     addr,
     0, //todo
     amount,
     addr
   )
+  return yield fetchBondingCurveTotals()
 }
 
 function *sellPNKToBondingCurve({payload: { amount } }) {
   const addr = yield select(walletSelectors.getAccount)
-  return yield call(
+  yield call(
     kleros.bondingCurve.sell,
     amount,
     addr,
     0, //todo
     addr
   )
+  return yield fetchBondingCurveTotals()
 }
 
 /**
