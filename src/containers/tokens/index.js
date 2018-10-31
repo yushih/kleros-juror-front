@@ -197,7 +197,8 @@ class Tokens extends PureComponent {
       buyPNKFromBondingCurveFormIsInvalid,
       submitBuyPNKFromBondingCurveForm,
       sellPNKToBondingCurveFormIsInvalid,
-      submitSellPNKToBondingCurveForm
+      submitSellPNKToBondingCurveForm,
+      bondingCurveFormViewState
     } = this.props
 
     if (!PNKBalance.data || !arbitratorData.data) return null
@@ -236,7 +237,8 @@ class Tokens extends PureComponent {
               sellPNKToBondingCurveFormIsInvalid={sellPNKToBondingCurveFormIsInvalid}
               submitBuyPNKFromBondingCurveForm={submitBuyPNKFromBondingCurveForm}
               submitSellPNKToBondingCurveForm={submitSellPNKToBondingCurveForm}
-              data={bondingCurveTotals.data}
+              totals={bondingCurveTotals.data}
+              viewState={bondingCurveFormViewState}
             />} 
           /> 
         </ReactModal>
@@ -449,7 +451,8 @@ export default connect(
     transferPNKFormIsInvalid: TransferPNKFormIsInvalid(state),
     withdrawPNKFormIsInvalid: WithdrawPNKFormIsInvalid(state),
     buyPNKFromBondingCurveFormIsInvalid: getBuyPNKFromBondingCurveFormIsInvalid(state),
-    sellPNKToBondingCurveFormIsInvalid: getSellPNKToBondingCurveFormIsInvalid(state)
+    sellPNKToBondingCurveFormIsInvalid: getSellPNKToBondingCurveFormIsInvalid(state),
+    bondingCurveFormViewState: state.bondingCurve.bondingCurveFormState
   }),
   {
     fetchBalance: walletActions.fetchBalance,

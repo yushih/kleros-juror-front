@@ -15,6 +15,21 @@ const {
 export { bondingCurveTotalsShape }
 
 // Reducer
-export default createReducer({
-  bondingCurveTotals: bondingCurveInitialState
-})
+export default createReducer(
+  { 
+    bondingCurveTotals: bondingCurveInitialState,
+    bondingCurveFormState: {
+      estimatedPNK: 0,
+      estimatedETH: 0
+    }
+  },
+  { ESTIMATE_PNK_FROM_BONDING_CURVE: f }
+)
+
+function f (state, action) {
+  const estimatedPNK = action.payload.ETH
+  if (state.bondingCurveFormState.estimatedPNK===estimatedPNK) {
+    return state;
+  } 
+  return Object.assign({}, state, { bondingCurveFormState: { estimatedPNK}});
+}

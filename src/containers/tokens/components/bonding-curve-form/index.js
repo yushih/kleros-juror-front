@@ -24,7 +24,9 @@ const {
       className: 'Form-noMargins'
     }
   },
-  
+  rate: {
+    type: 'info'
+  }
 })
 
 export { getBuyPNKFromBondingCurveFormIsInvalid, submitBuyPNKFromBondingCurveForm }
@@ -55,6 +57,14 @@ const {
 export { getSellPNKToBondingCurveFormIsInvalid, submitSellPNKToBondingCurveForm }
 
 class BondingCurveForm extends PureComponent {
+  onBuyPNKFormChange(values, dispatch, props) {
+    dispatch({
+      type: 'ESTIMATE_PNK_FROM_BONDING_CURVE', 
+      payload: { ETH: values.amountOfETH }
+    })
+  }
+
+
   render() {
     const {
       handleBuyPNK,
@@ -64,7 +74,8 @@ class BondingCurveForm extends PureComponent {
       buyPNKFromBondingCurveFormIsInvalid,
       sellPNKToBondingCurveFormIsInvalid,
       submitBuyPNKFromBondingCurveForm,
-      data
+      totals,
+      viewState
     } = this.props
 
     return (
@@ -77,12 +88,17 @@ class BondingCurveForm extends PureComponent {
               <span>
                 The amount of ETH you'd like to spend:
               </span>
+            ),
+            rate: (
+              <span>
+                Estimated amount of PNK you'll get: {viewState.estimatedPNK}
+              </span>
             )
           }}
           onSubmit={handleBuyPNK}
           validate={validateBuyPNK}
+          onChange={this.onBuyPNKFormChange}
         />
-          bonding curve: {JSON.stringify(data)}
         <Button
           onClick={submitBuyPNKFromBondingCurveForm}
           disabled={buyPNKFromBondingCurveFormIsInvalid}
