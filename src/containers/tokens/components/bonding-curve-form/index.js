@@ -26,7 +26,10 @@ const {
     }
   },
   rate: {
-    type: 'info'
+    type: 'info',
+    props: {
+      className: 'Tokens-form-rate'
+    }
   }
 })
 
@@ -52,7 +55,12 @@ const {
       className: 'Form-noMargins'
     }
   },
-  
+  rate: {
+    type: 'info',
+    props: {
+      className: 'Tokens-form-rate'
+    }
+  }
 })
 
 export { getSellPNKToBondingCurveFormIsInvalid, submitSellPNKToBondingCurveForm }
@@ -65,6 +73,12 @@ class BondingCurveForm extends PureComponent {
     })
   }
 
+  onSellPNKFormChange(values, dispatch, props) {
+    dispatch({
+      type: 'ESTIMATE_ETH_FROM_BONDING_CURVE', 
+      payload: { PNK: values.amountOfPNK }
+    })
+  }
 
   render() {
     const {
@@ -116,10 +130,16 @@ class BondingCurveForm extends PureComponent {
               <span>
                 The amount of PNK you'd like to sell:
               </span>
+            ),
+            rate: (
+              <span>
+                Estimated amount of ETH you'll get: {weiBNToDecimalString(viewState.estimatedETH)}
+              </span>
             )
           }}
           onSubmit={handleSellPNK}
           validate={validateSellPNK}
+          onChange={this.onSellPNKFormChange}
         />
         <Button
           onClick={submitSellPNKToBondingCurveForm}
