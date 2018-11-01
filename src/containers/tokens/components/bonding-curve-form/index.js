@@ -3,6 +3,7 @@ import React, { PureComponent } from 'react'
 import Button from '../../../../components/button'
 import { form } from '../../../../utils/form-generator'
 import { required, number, positiveNumber } from '../../../../utils/validation'
+import { weiBNToDecimalString } from '../../../../utils/number'
 
 const {
   Form: BuyPNKFromBondingCurveForm,
@@ -91,7 +92,7 @@ class BondingCurveForm extends PureComponent {
             ),
             rate: (
               <span>
-                Estimated amount of PNK you'll get: {viewState.estimatedPNK}
+                Estimated amount of PNK you'll get: {weiBNToDecimalString(viewState.estimatedPNK)}
               </span>
             )
           }}

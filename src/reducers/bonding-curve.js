@@ -1,6 +1,8 @@
 import PropTypes from 'prop-types'
 import createReducer, { createResource } from 'lessdux'
 
+import * as bondingCurve from '../api/bonding-curve'
+
 // Shapes
 const {
   shape: bondingCurveTotalsShape,
@@ -15,6 +17,19 @@ const {
 export { bondingCurveTotalsShape }
 
 // Reducer
+function estimatePNK (state, action) {
+  const estimatedPNK = bondingCurve.estimatePNK(
+    action.payload.ETH,
+    state.bondingCurveTotals.data.totalETH,
+    state.bondingCurveTotals.data.totalPNK,
+    state.bondingCurveTotals.data.spread)
+
+  if (state.bondingCurveFormState.estimatedPNK===estimatedPNK) {
+    return state;
+  } 
+  return Object.assign({}, state, { bondingCurveFormState: { estimatedPNK}});
+}
+
 export default createReducer(
   { 
     bondingCurveTotals: bondingCurveInitialState,
@@ -23,13 +38,6 @@ export default createReducer(
       estimatedETH: 0
     }
   },
-  { ESTIMATE_PNK_FROM_BONDING_CURVE: f }
+  { ESTIMATE_PNK_FROM_BONDING_CURVE: estimatePNK }
 )
 
-function f (state, action) {
-  const estimatedPNK = action.payload.ETH
-  if (state.bondingCurveFormState.estimatedPNK===estimatedPNK) {
-    return state;
-  } 
-  return Object.assign({}, state, { bondingCurveFormState: { estimatedPNK}});
-}
