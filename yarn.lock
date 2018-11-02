@@ -9248,6 +9248,14 @@ kleros-interaction@^0.0.22:
     minimetoken "^0.2.0"
     zeppelin-solidity "^1.7.0"
 
+kleros-interaction@^0.1.1:
+  version "0.1.1"
+  resolved "https://registry.yarnpkg.com/kleros-interaction/-/kleros-interaction-0.1.1.tgz#a2c0a25a2f7c861c9b8bfabc792a19dd7353e8a2"
+  integrity sha512-i2mYXpa4BD8YgN4/F9PBvHa27P5WRKxWtILslDRIy77bZFYKRvieNhMZAlQepdnqOS4tPrrdNZv/yjCz1Ke5ag==
+  dependencies:
+    minimetoken "^0.2.0"
+    openzeppelin-solidity "^1.12.0"
+
 kleros-scripts@^0.6.0:
   version "0.6.0"
   resolved "https://registry.yarnpkg.com/kleros-scripts/-/kleros-scripts-0.6.0.tgz#0efb74af1a83d6d5cea654d1da9985912afa5a2c"
@@ -11027,6 +11035,11 @@ opencollective@1.0.3:
     minimist "1.2.0"
     node-fetch "1.6.3"
     opn "4.0.2"
+
+openzeppelin-solidity@^1.12.0:
+  version "1.12.0"
+  resolved "https://registry.yarnpkg.com/openzeppelin-solidity/-/openzeppelin-solidity-1.12.0.tgz#7b9c55975e73370d4541e3442b30cb3d91ac973a"
+  integrity sha512-WlorzMXIIurugiSdw121RVD5qA3EfSI7GybTn+/Du0mPNgairjt29NpVTAaH8eLjAeAwlw46y7uQKy0NYem/gA==
 
 opn@4.0.2:
   version "4.0.2"

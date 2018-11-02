@@ -2,6 +2,7 @@ import Eth from 'ethjs'
 import { Kleros } from 'kleros-api'
 
 import * as ethConstants from '../constants/eth'
+import BondingCurve from '../api/bonding-curve'
 
 const env = process.env.NODE_ENV === 'production' ? 'PROD' : 'DEV'
 const ETHEREUM_PROVIDER = process.env[`REACT_APP_${env}_ETHEREUM_PROVIDER`]
@@ -16,6 +17,7 @@ else eth = new Eth(new Eth.HttpProvider(ETHEREUM_PROVIDER))
 
 let ARBITRATOR_ADDRESS, BONDING_CURVE_ADDRESS
 let kleros
+let bondingCurve
 let networkID
 const initializeKleros = async () => {
   networkID = await eth.net_version()
@@ -27,6 +29,10 @@ const initializeKleros = async () => {
       }_ARBITRATOR_ADDRESS`
     ]
 
+  kleros = new Kleros(eth.currentProvider, STORE_PROVIDER, ARBITRATOR_ADDRESS)
+}
+
+const initializeBondingCurve = async () => {
   BONDING_CURVE_ADDRESS = 
     process.env[
       `REACT_APP_${env}_${
@@ -34,7 +40,7 @@ const initializeKleros = async () => {
       }_BONDING_CURVE_ADDRESS`
     ]
 
-  kleros = new Kleros(eth.currentProvider, STORE_PROVIDER, ARBITRATOR_ADDRESS, undefined, BONDING_CURVE_ADDRESS)
+  bondingCurve = new BondingCurve(eth.currentProvider, BONDING_CURVE_ADDRESS)
 }
 
 const ETHAddressRegExpCaptureGroup = '(0x[a-fA-F0-9]{40})'
@@ -47,6 +53,8 @@ export {
   BONDING_CURVE_ADDRESS,
   kleros,
   initializeKleros,
+  bondingCurve,
+  initializeBondingCurve,
   ETHAddressRegExpCaptureGroup,
   ETHAddressRegExp,
   strictETHAddressRegExp,
