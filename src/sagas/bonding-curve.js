@@ -19,7 +19,7 @@ function *buyPNKFromBondingCurve({payload: { amount } }) {
   yield call(
     bondingCurve.buy,
     addr,
-    0, //todo
+    0,
     amount,
     addr
   )
@@ -32,7 +32,7 @@ function *sellPNKToBondingCurve({payload: { amount } }) {
     bondingCurve.sell,
     amount,
     addr,
-    0, //todo
+    0,
     addr
   )
   return yield fetchBondingCurveTotals()

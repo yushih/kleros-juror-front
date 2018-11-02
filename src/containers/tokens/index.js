@@ -254,7 +254,7 @@ class Tokens extends PureComponent {
                 <br />
                 <br />
                 <small>
-                  If you don't have PNK, you can buy some{' '}
+                  If you don't have PNK, you can buy some from{' '}
                   <a onClick={this.handleOpenBondingCurveForm.bind(this)}>
                     here
                   </a> or from{' '}

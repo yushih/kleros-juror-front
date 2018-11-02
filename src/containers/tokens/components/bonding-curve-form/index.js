@@ -89,6 +89,7 @@ class BondingCurveForm extends PureComponent {
       buyPNKFromBondingCurveFormIsInvalid,
       sellPNKToBondingCurveFormIsInvalid,
       submitBuyPNKFromBondingCurveForm,
+      submitSellPNKToBondingCurveForm,
       totals,
       viewState
     } = this.props
