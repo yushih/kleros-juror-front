@@ -1,4 +1,6 @@
-import Eth, { toBN } from 'ethjs'
+import Eth, { toBN, BN } from 'ethjs'
+import ContractImplementation from 'kleros-api/es/contracts/ContractImplementation'
+import MiniMePinakion from 'kleros-api/es/contracts/implementations/PNK/MiniMePinakion'
 import bondingCurveArtifact from 'kleros-interaction/build/contracts/BondingCurve'
 import tokenArtifact from 'kleros-interaction/build/contracts/MiniMeTokenERC20'
 
@@ -60,15 +62,17 @@ export function estimateETH(inputPNK, totalETH, totalPNK, spread) {
    .div(SPREAD_DIVISOR.add(spread)).toString()
 }
 
-/* The API class for calling the blockchain.
+/**
+ * Provides interaction with the bonding curve contract on the blockchain.
  */
-export default class BondingCurve {
-  /*@param {object} _ethProvider The ethereum provider object.
-   *@param {string} _contractAddress The address of the bonding curve contract.
+export default class BondingCurve extends ContractImplementation {
+  /**
+   * Create new Bonding Curve Implementation.
+   * @param {object} web3Provider - web3 instance.
+   * @param {string} contractAddress - Address of the Bonding Curve contract.
    */
-  constructor(_ethProvider, _contractAddress) {
-    this.eth = new Eth(_ethProvider)
-    this.contractInstance = this.eth.contract(bondingCurveArtifact.abi).at(_contractAddress)
+  constructor(web3Provider, contractAddress) {
+    super(web3Provider, bondingCurveArtifact, contractAddress)
   }
 
   /**
@@ -76,7 +80,13 @@ export default class BondingCurve {
    * @returns {number} - The total amount of ETH as a BigNumber.
    */
   getTotalETH = async () => {
-    return this.contractInstance.totalETH()
+    await this.loadContract()
+    try {
+      return this.contractInstance.totalETH()
+    } catch (err) {
+      console.error(err)
+      throw new Error('Unable to fetch totalETH from the bonding curve')
+    }
   }
 
   /**
@@ -84,7 +94,13 @@ export default class BondingCurve {
    * @returns {number} - The total amount of bonded token as a BigNumber.
    */
   getTotalTKN = async () => {
-    return this.contractInstance.totalTKN()
+    await this.loadContract()
+    try {
+      return this.contractInstance.totalTKN()
+    } catch (err) {
+      console.error(err)
+      throw new Error('Unable to fetch totalTKN from the bonding curve')
+    }
   }
 
   /**
@@ -92,7 +108,13 @@ export default class BondingCurve {
    * @returns {number} - The spread as a BigNumber.
    */
   getSpread = async () => {
-    return this.contractInstance.spread()
+    await this.loadContract()
+    try {
+      return this.contractInstance.spread()
+    } catch (err) {
+      console.error(err)
+      throw new Error('Unable to fetch spread from the bonding curve')
+    }
   }
 
   /**
@@ -104,9 +126,11 @@ export default class BondingCurve {
    * @returns {object} - The result transaction object.
    */
   buy = async (receiver, minTKN, amount, account) => {
+    await this.loadContract()
     return this.contractInstance.buy(receiver, minTKN, {
       from: account,
-      value: amount
+      value: amount,
+      gas: process.env.GAS || undefined
     })
   }
 
@@ -119,14 +143,19 @@ export default class BondingCurve {
    * @returns {object} - The result transaction object.
    */
   sell = async (amountTKN, receiverAddr, minETH, account) => {
+    await this.loadContract()
+
     const pinakionContractAddress = await this.contractInstance.tokenContract()
-    const pnkInstance = this.eth.contract(tokenArtifact.abi).at(pinakionContractAddress)
+    const pnkInstance = new MiniMePinakion(
+      this.getWeb3Provider(),
+      pinakionContractAddress
+    )
 
     // See BondingCurve.sol in kleros-interaction for the definition of extraData.
     const extraData =
       '0x62637331' + // Magic number for string "bcs1"
       (receiverAddr.startsWith('0x') ? receiverAddr.slice(2) : receiverAddr) +
-      new Eth.BN(minETH).toString(16, 64)
+      new BN(minETH).toString(16, 64)
 
     return pnkInstance.approveAndCall(
       this.contractAddress,
