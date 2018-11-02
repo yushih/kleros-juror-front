@@ -1,8 +1,8 @@
 import Eth, { toBN, BN } from 'ethjs'
 import ContractImplementation from 'kleros-api/es/contracts/ContractImplementation'
 import MiniMePinakion from 'kleros-api/es/contracts/implementations/PNK/MiniMePinakion'
-import bondingCurveArtifact from 'kleros-interaction/build/contracts/BondingCurve'
-import tokenArtifact from 'kleros-interaction/build/contracts/MiniMeTokenERC20'
+import bondingCurveArtifact from './BondingCurve'
+import tokenArtifact from './MiniMeTokenERC20'
 
 import { decimalStringToWeiBN } from '../utils/number'
 
