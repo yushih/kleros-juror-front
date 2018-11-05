@@ -1,5 +1,5 @@
 import { BN } from 'ethjs'
-import { takeLatest, call, select } from 'redux-saga/effects'
+import { takeLatest, call, select, all } from 'redux-saga/effects'
 import ContractImplementation from 'kleros-api/lib/contracts/ContractImplementation'
 import MiniMePinakion from 'kleros-api/lib/contracts/implementations/PNK/MiniMePinakion'
 
@@ -28,11 +28,12 @@ const getBondingCurve = (function () {
  * @returns {object} { totalETH, totalPNK, spread } all keys map to big number objects.
  */
 function* fetchBondingCurveTotals() {
-  return {
-    totalETH: yield call(getBondingCurve().getTotalETH),
-    totalPNK: yield call(getBondingCurve().getTotalTKN),
-    spread: yield call(getBondingCurve().getSpread)
-  }
+  const [totalETH, totalPNK, spread] = yield all([
+    call(getBondingCurve().getTotalETH),
+    call(getBondingCurve().getTotalTKN),
+    call(getBondingCurve().getSpread)
+  ])
+  return { totalETH, totalPNK, spread }
 }
 
 /**
