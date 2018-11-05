@@ -40,13 +40,7 @@ import {
   WithdrawPNKFormIsInvalid,
   submitWithdrawPNKForm
 } from './components/withdraw-pnk-form'
-import {
-  getBuyPNKFromBondingCurveFormIsInvalid,
-  getSellPNKToBondingCurveFormIsInvalid,
-  submitBuyPNKFromBondingCurveForm,
-  submitSellPNKToBondingCurveForm,
-  BondingCurveForm
-} from './components/bonding-curve-form'
+import { BondingCurveForm } from './components/bonding-curve-form'
 
 import './tokens.css'
 
@@ -87,14 +81,6 @@ class Tokens extends PureComponent {
     // passPeriodForm
     passPeriodFormIsInvalid: PropTypes.bool.isRequired,
     submitPassPeriodForm: PropTypes.func.isRequired,
-
-    // buyPNKFromBondingCurveForm
-    buyPNKFromBondingCurveFormIsInvalid: PropTypes.bool.isRequired,
-    submitBuyPNKFromBondingCurveForm: PropTypes.func.isRequired,
-
-    // sellPNKToBondingCurveForm
-    sellPNKToBondingCurveFormIsInvalid: PropTypes.bool.isRequired,
-    submitSellPNKToBondingCurveForm: PropTypes.func.isRequired
   }
 
   state = {
@@ -188,11 +174,7 @@ class Tokens extends PureComponent {
       submitTransferPNKForm,
       withdrawPNKFormIsInvalid,
       submitWithdrawPNKForm,
-      bondingCurveTotals,
-      buyPNKFromBondingCurveFormIsInvalid,
-      submitBuyPNKFromBondingCurveForm,
-      sellPNKToBondingCurveFormIsInvalid,
-      submitSellPNKToBondingCurveForm
+      bondingCurveTotals
     } = this.props
 
     const { showBondingCurveForm } = this.state
@@ -222,19 +204,7 @@ class Tokens extends PureComponent {
             done={
               <BondingCurveForm
                 handleBuyPNK={this.handleBuyPNKFromBondingCurveForm}
-                buyPNKFromBondingCurveFormIsInvalid={
-                  buyPNKFromBondingCurveFormIsInvalid
-                }
                 handleSellPNK={this.handleSellPNKToBondingCurveForm}
-                sellPNKToBondingCurveFormIsInvalid={
-                  sellPNKToBondingCurveFormIsInvalid
-                }
-                submitBuyPNKFromBondingCurveForm={
-                  submitBuyPNKFromBondingCurveForm
-                }
-                submitSellPNKToBondingCurveForm={
-                  submitSellPNKToBondingCurveForm
-                }
                 bondingCurveTotals={bondingCurveTotals}
               />
             }
@@ -445,13 +415,7 @@ export default connect(
     buyPNKFormIsInvalid: getBuyPNKFormIsInvalid(state),
     passPeriodFormIsInvalid: getPassPeriodFormIsInvalid(state),
     transferPNKFormIsInvalid: TransferPNKFormIsInvalid(state),
-    withdrawPNKFormIsInvalid: WithdrawPNKFormIsInvalid(state),
-    buyPNKFromBondingCurveFormIsInvalid: getBuyPNKFromBondingCurveFormIsInvalid(
-      state
-    ),
-    sellPNKToBondingCurveFormIsInvalid: getSellPNKToBondingCurveFormIsInvalid(
-      state
-    )
+    withdrawPNKFormIsInvalid: WithdrawPNKFormIsInvalid(state)
   }),
   {
     fetchBalance: walletActions.fetchBalance,
@@ -467,8 +431,6 @@ export default connect(
     submitBuyPNKForm,
     submitPassPeriodForm,
     submitTransferPNKForm,
-    submitWithdrawPNKForm,
-    submitBuyPNKFromBondingCurveForm,
-    submitSellPNKToBondingCurveForm
+    submitWithdrawPNKForm
   }
 )(Tokens)

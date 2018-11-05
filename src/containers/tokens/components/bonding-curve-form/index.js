@@ -38,11 +38,6 @@ const {
   }
 })
 
-export {
-  getBuyPNKFromBondingCurveFormIsInvalid,
-  submitBuyPNKFromBondingCurveForm
-}
-
 const {
   Form: SellPNKToBondingCurveForm,
   isInvalid: getSellPNKToBondingCurveFormIsInvalid,
@@ -70,11 +65,6 @@ const {
     }
   }
 })
-
-export {
-  getSellPNKToBondingCurveFormIsInvalid,
-  submitSellPNKToBondingCurveForm
-}
 
 class BondingCurveForm extends PureComponent {
   static propTypes = {
@@ -167,8 +157,20 @@ class BondingCurveForm extends PureComponent {
 BondingCurveForm = connect(
   state => ({
     inputETH: formValueSelector('buyPNKFromBondingCurveForm')(state, 'amountOfETH'),
-    inputPNK: formValueSelector('sellPNKToBondingCurveForm')(state, 'amountOfPNK')
-  })
+    inputPNK: formValueSelector('sellPNKToBondingCurveForm')(state, 'amountOfPNK'),
+    buyPNKFromBondingCurveFormIsInvalid: getBuyPNKFromBondingCurveFormIsInvalid(
+      state
+    ),
+    sellPNKToBondingCurveFormIsInvalid: getSellPNKToBondingCurveFormIsInvalid(
+      state
+    )
+  }),
+  {
+    getSellPNKToBondingCurveFormIsInvalid,
+    submitSellPNKToBondingCurveForm,
+    getBuyPNKFromBondingCurveFormIsInvalid,
+    submitBuyPNKFromBondingCurveForm
+  }
 )(BondingCurveForm)
 
 export { BondingCurveForm }
