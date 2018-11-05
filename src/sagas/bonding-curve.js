@@ -11,7 +11,10 @@ import { bondingCurve } from '../bootstrap/dapp-api'
 import { lessduxSaga } from '../utils/saga'
 
 /**
- * The factory method for accessing the bonding curve contract.
+ * The factory method for accessing the bonding curve contract. This method is
+ * necessary because the contract address is not available until the <Initializer>
+ * mounts, so we can't bind a module level variable to a BondingCurve instance.
+ * @returns {BondingCurve} The BondingCurve instance.
  */
 const getBondingCurve = (function () {
   var bondingCurve;
@@ -44,7 +47,7 @@ function* fetchBondingCurveTotals() {
 function* buyPNKFromBondingCurve({ payload: { amount } }) {
   const addr = yield select(walletSelectors.getAccount)
   yield call(getBondingCurve().buy, addr, 0, amount, addr)
-  return yield fetchBondingCurveTotals()
+  return yield call(fetchBondingCurveTotals)
 }
 
 /**
@@ -55,7 +58,7 @@ function* buyPNKFromBondingCurve({ payload: { amount } }) {
 function* sellPNKToBondingCurve({ payload: { amount } }) {
   const addr = yield select(walletSelectors.getAccount)
   yield call(getBondingCurve().sell, amount, addr, 0, addr)
-  return yield fetchBondingCurveTotals()
+  return yield call(fetchBondingCurveTotals)
 }
 
 /**
