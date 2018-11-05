@@ -7,7 +7,6 @@ import bondingCurveArtifact from '../assets/contracts/BondingCurve'
 import { eth, BONDING_CURVE_ADDRESS } from '../bootstrap/dapp-api'
 import * as bondingCurveActions from '../actions/bonding-curve'
 import * as walletSelectors from '../reducers/wallet'
-import { bondingCurve } from '../bootstrap/dapp-api'
 import { lessduxSaga } from '../utils/saga'
 
 /**

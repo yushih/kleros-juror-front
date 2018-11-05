@@ -90,7 +90,7 @@ class BondingCurveForm extends PureComponent {
 
   estimateETH() {
     const { inputPNK, bondingCurveTotals } = this.props
-    return weiBNToDecimalString(estimatePNK(inputPNK,
+    return weiBNToDecimalString(estimateETH(inputPNK,
       bondingCurveTotals.data.totalETH, 
       bondingCurveTotals.data.totalPNK, 
       bondingCurveTotals.data.spread))
