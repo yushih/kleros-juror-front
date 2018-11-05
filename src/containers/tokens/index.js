@@ -138,10 +138,6 @@ class Tokens extends PureComponent {
     return errors
   }
 
-  validateBuyPNKFromBondingCurveForm = _values => {}
-
-  validateSellPNKToBondingCurveForm = _values => {}
-
   handleWithdrawPNKFormSubmit = formData => {
     const { withdrawPNK } = this.props
     const { amount } = formData
@@ -231,12 +227,10 @@ class Tokens extends PureComponent {
             done={
               <BondingCurveForm
                 handleBuyPNK={this.handleBuyPNKFromBondingCurveForm}
-                validateBuyPNK={this.validateBuyPNKFromBondingCurveForm}
                 buyPNKFromBondingCurveFormIsInvalid={
                   buyPNKFromBondingCurveFormIsInvalid
                 }
                 handleSellPNK={this.handleSellPNKToBondingCurveForm}
-                validateSellPNK={this.validateSellPNKToBondingCurveForm}
                 sellPNKToBondingCurveFormIsInvalid={
                   sellPNKToBondingCurveFormIsInvalid
                 }

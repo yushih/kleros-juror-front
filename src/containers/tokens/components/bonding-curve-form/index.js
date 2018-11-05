@@ -79,9 +79,7 @@ export {
 class BondingCurveForm extends PureComponent {
   static propTypes = {
     handleBuyPNK: PropTypes.func.isRequired,
-    validateBuyPNK: PropTypes.func.isRequired,
     handleSellPNK: PropTypes.func.isRequired,
-    validateSellPNK: PropTypes.func.isRequired,
     buyPNKFromBondingCurveFormIsInvalid: PropTypes.bool.isRequired,
     sellPNKToBondingCurveFormIsInvalid: PropTypes.bool.isRequired,
     submitBuyPNKFromBondingCurveForm: PropTypes.func.isRequired,
@@ -111,9 +109,7 @@ class BondingCurveForm extends PureComponent {
   render() {
     const {
       handleBuyPNK,
-      validateBuyPNK,
       handleSellPNK,
-      validateSellPNK,
       buyPNKFromBondingCurveFormIsInvalid,
       sellPNKToBondingCurveFormIsInvalid,
       submitBuyPNKFromBondingCurveForm,
@@ -134,7 +130,6 @@ class BondingCurveForm extends PureComponent {
             )
           }}
           onSubmit={handleBuyPNK}
-          validate={validateBuyPNK}
         />
         <Button
           onClick={submitBuyPNKFromBondingCurveForm}
@@ -156,7 +151,6 @@ class BondingCurveForm extends PureComponent {
             )
           }}
           onSubmit={handleSellPNK}
-          validate={validateSellPNK}
         />
         <Button
           onClick={submitSellPNKToBondingCurveForm}
