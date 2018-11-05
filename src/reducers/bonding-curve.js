@@ -17,9 +17,5 @@ export { bondingCurveTotalsShape }
 export default createReducer(
   {
     bondingCurveTotals: bondingCurveInitialState,
-    bondingCurveFormState: {
-      estimatedPNK: '0',
-      estimatedETH: '0'
-    }
   }
 )

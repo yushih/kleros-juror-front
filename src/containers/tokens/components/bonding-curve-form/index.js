@@ -1,10 +1,14 @@
+import { connect } from 'react-redux'
+import { toBN } from 'ethjs'
 import React, { PureComponent } from 'react'
 import PropTypes from 'prop-types'
+import { formValueSelector } from 'redux-form' 
 
 import Button from '../../../../components/button'
 import { form } from '../../../../utils/form-generator'
 import { required, number, positiveNumber } from '../../../../utils/validation'
-import { weiBNToDecimalString } from '../../../../utils/number'
+import { decimalStringToWeiBN, weiBNToDecimalString } from '../../../../utils/number'
+import * as bondingCurveSelectors from '../../../../reducers/bonding-curve'
 
 const {
   Form: BuyPNKFromBondingCurveForm,
@@ -82,24 +86,26 @@ class BondingCurveForm extends PureComponent {
     sellPNKToBondingCurveFormIsInvalid: PropTypes.bool.isRequired,
     submitBuyPNKFromBondingCurveForm: PropTypes.func.isRequired,
     submitSellPNKToBondingCurveForm: PropTypes.func.isRequired,
-    viewState: PropTypes.shape({
-      estimatedETH: PropTypes.string.isRequired,
-      estimatedPNK: PropTypes.string.isRequired
-    }).isRequired
+    bondingCurveTotals:
+      bondingCurveSelectors.bondingCurveTotalsShape.isRequired,
+    inputETH: PropTypes.string,
+    inputPNK: PropTypes.string
   }
 
-  onBuyPNKFormChange(values, dispatch, _props) {
-    dispatch({
-      type: 'ESTIMATE_PNK_FROM_BONDING_CURVE',
-      payload: { ETH: values.amountOfETH }
-    })
+  estimatePNK() {
+    const { inputETH, bondingCurveTotals } = this.props
+    return weiBNToDecimalString(estimatePNK(inputETH,
+      bondingCurveTotals.data.totalETH, 
+      bondingCurveTotals.data.totalPNK, 
+      bondingCurveTotals.data.spread))
   }
 
-  onSellPNKFormChange(values, dispatch, _props) {
-    dispatch({
-      type: 'ESTIMATE_ETH_FROM_BONDING_CURVE',
-      payload: { PNK: values.amountOfPNK }
-    })
+  estimateETH() {
+    const { inputPNK, bondingCurveTotals } = this.props
+    return weiBNToDecimalString(estimatePNK(inputPNK,
+      bondingCurveTotals.data.totalETH, 
+      bondingCurveTotals.data.totalPNK, 
+      bondingCurveTotals.data.spread))
   }
 
   render() {
@@ -112,7 +118,6 @@ class BondingCurveForm extends PureComponent {
       sellPNKToBondingCurveFormIsInvalid,
       submitBuyPNKFromBondingCurveForm,
       submitSellPNKToBondingCurveForm,
-      viewState
     } = this.props
 
     return (
@@ -124,14 +129,12 @@ class BondingCurveForm extends PureComponent {
             explanation: <span>The amount of ETH you'd like to spend:</span>,
             rate: (
               <span>
-                Estimated amount of PNK you'll get:{' '}
-                {weiBNToDecimalString(viewState.estimatedPNK)}
+                Estimated amount of PNK you'll get: {this.estimatePNK()}
               </span>
             )
           }}
           onSubmit={handleBuyPNK}
           validate={validateBuyPNK}
-          onChange={this.onBuyPNKFormChange}
         />
         <Button
           onClick={submitBuyPNKFromBondingCurveForm}
@@ -148,14 +151,12 @@ class BondingCurveForm extends PureComponent {
             explanation: <span>The amount of PNK you'd like to sell:</span>,
             rate: (
               <span>
-                Estimated amount of ETH you'll get:{' '}
-                {weiBNToDecimalString(viewState.estimatedETH)}
+                Estimated amount of ETH you'll get: {this.estimateETH()}
               </span>
             )
           }}
           onSubmit={handleSellPNK}
           validate={validateSellPNK}
-          onChange={this.onSellPNKFormChange}
         />
         <Button
           onClick={submitSellPNKToBondingCurveForm}
@@ -169,4 +170,74 @@ class BondingCurveForm extends PureComponent {
   } // render()
 }
 
+BondingCurveForm = connect(
+  state => ({
+    inputETH: formValueSelector('buyPNKFromBondingCurveForm')(state, 'amountOfETH'),
+    inputPNK: formValueSelector('sellPNKToBondingCurveForm')(state, 'amountOfPNK')
+  })
+)(BondingCurveForm)
+
 export { BondingCurveForm }
+
+const SPREAD_DIVISOR = toBN(10000) // Must be kept in sync with the bonding curve contract
+
+/** Given an input ETH amount and the state values of the bonding curve contract,
+ *  compute the amount of PNK that can be brought using the same formula as the
+ *  bonding curve contract. Note this duplicates the algorithm from the contract
+ *  but we can't call the contract because that way the turnaround would be too
+ *  slow for a responsive UI.
+ *  @param {string} inputETH User input ETH amount in ETH (not Wei). May not be a valid number.
+ *  @param {BigNumber} totalETH 'totalETH' value of the contract.
+ *  @param {BigNumber} totalPNK 'totalPNK' value of the contract.
+ *  @param {BigNumber} spread 'spread' value of the contract.
+ *  @returns {string} Amount of PNK in wei.
+ */
+function estimatePNK(inputETH, totalETH, totalPNK, spread) {
+  var ETH
+  try {
+    ETH = decimalStringToWeiBN(inputETH)
+  } catch (_) {
+    return '0'
+  }
+  // convert all to BN from BigNumber
+  totalETH = toBN(totalETH)
+  totalPNK = toBN(totalPNK)
+  spread = toBN(spread)
+
+  return ETH.mul(totalPNK)
+    .mul(SPREAD_DIVISOR)
+    .div(totalETH.add(ETH))
+    .div(SPREAD_DIVISOR.add(spread))
+    .toString()
+}
+
+/** Given an input PNK amount and the state values of the bonding curve contract,
+ *  compute the amount of ETH that the PNK is sold for using the same formula as
+ *  the bonding curve contract. Note this duplicates the algorithm from the contract
+ *  but we can't call the contract because that way the turnaround would be too
+ *  slow for a responsive UI.
+ *  @param {string} inputPNK User input PNK amount. May not be a valid number.
+ *  @param {BigNumber} totalETH 'totalETH' value of the contract.
+ *  @param {BigNumber} totalPNK 'totalPNK' value of the contract.
+ *  @param {BigNumber} spread 'spread' value of the contract.
+ *  @returns {string} Amount of ETH in wei.
+ */
+function estimateETH(inputPNK, totalETH, totalPNK, spread) {
+  var PNK
+  try {
+    PNK = decimalStringToWeiBN(inputPNK)
+  } catch (_) {
+    return '0'
+  }
+  // convert all to BN from BigNumber
+  totalETH = toBN(totalETH)
+  totalPNK = toBN(totalPNK)
+  spread = toBN(spread)
+
+  return totalETH
+    .mul(PNK)
+    .mul(SPREAD_DIVISOR)
+    .div(totalPNK.add(PNK))
+    .div(SPREAD_DIVISOR.add(spread))
+    .toString()
+}

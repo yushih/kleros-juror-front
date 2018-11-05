@@ -59,10 +59,6 @@ class Tokens extends PureComponent {
     arbitratorData: arbitratorSelectors.arbitratorDataShape.isRequired,
     bondingCurveTotals:
       bondingCurveSelectors.bondingCurveTotalsShape.isRequired,
-    bondingCurveFormViewState: PropTypes.shape({
-      estimatedETH: PropTypes.string.isRequired,
-      estimatedPNK: PropTypes.string.isRequired
-    }).isRequired,
 
     // Action Dispatchers
     fetchBalance: PropTypes.func.isRequired,
@@ -205,8 +201,7 @@ class Tokens extends PureComponent {
       buyPNKFromBondingCurveFormIsInvalid,
       submitBuyPNKFromBondingCurveForm,
       sellPNKToBondingCurveFormIsInvalid,
-      submitSellPNKToBondingCurveForm,
-      bondingCurveFormViewState
+      submitSellPNKToBondingCurveForm
     } = this.props
 
     const { showBondingCurveForm } = this.state
@@ -251,8 +246,7 @@ class Tokens extends PureComponent {
                 submitSellPNKToBondingCurveForm={
                   submitSellPNKToBondingCurveForm
                 }
-                totals={bondingCurveTotals.data}
-                viewState={bondingCurveFormViewState}
+                bondingCurveTotals={bondingCurveTotals}
               />
             }
           />
@@ -468,8 +462,7 @@ export default connect(
     ),
     sellPNKToBondingCurveFormIsInvalid: getSellPNKToBondingCurveFormIsInvalid(
       state
-    ),
-    bondingCurveFormViewState: state.bondingCurve.bondingCurveFormState
+    )
   }),
   {
     fetchBalance: walletActions.fetchBalance,
