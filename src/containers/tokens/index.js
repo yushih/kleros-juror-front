@@ -168,13 +168,8 @@ class Tokens extends PureComponent {
     sellPNKToBondingCurve(decimalStringToWeiBN(amountOfPNK).toString())
   }
 
-  handleOpenBondingCurveForm = event => {
-    this.setState({ showBondingCurveForm: true })
-    event.preventDefault()
-  }
-
-  handleCloseBondingCurveForm = event => {
-    this.setState({ showBondingCurveForm: false })
+  handleToggleBondingCurveForm = event => {
+    this.setState({ showBondingCurveForm: !this.state.showBondingCurveForm })
     event.preventDefault()
   }
 
@@ -216,7 +211,7 @@ class Tokens extends PureComponent {
       <div key={0}>
         <ReactModal ariaHideApp={false} isOpen={showBondingCurveForm}>
           <div
-            onClick={this.handleCloseBondingCurveForm}
+            onClick={this.handleToggleBondingCurveForm}
             className="Tokens-modal-dismiss"
           >
             &times;
@@ -258,7 +253,7 @@ class Tokens extends PureComponent {
                 <br />
                 <small>
                   If you don't have PNK, you can buy some from{' '}
-                  <a onClick={this.handleOpenBondingCurveForm}>here</a> or from{' '}
+                  <a onClick={this.handleToggleBondingCurveForm}>here</a> or from{' '}
                   <a
                     href="https://idex.market/eth/pnk"
                     target="_blank"
