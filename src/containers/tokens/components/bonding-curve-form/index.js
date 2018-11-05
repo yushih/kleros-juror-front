@@ -2,12 +2,15 @@ import { connect } from 'react-redux'
 import { toBN } from 'ethjs'
 import React, { PureComponent } from 'react'
 import PropTypes from 'prop-types'
-import { formValueSelector } from 'redux-form' 
+import { formValueSelector } from 'redux-form'
 
 import Button from '../../../../components/button'
 import { form } from '../../../../utils/form-generator'
 import { required, number, positiveNumber } from '../../../../utils/validation'
-import { decimalStringToWeiBN, weiBNToDecimalString } from '../../../../utils/number'
+import {
+  decimalStringToWeiBN,
+  weiBNToDecimalString
+} from '../../../../utils/number'
 import * as bondingCurveSelectors from '../../../../reducers/bonding-curve'
 
 const {
@@ -80,20 +83,30 @@ class BondingCurveForm extends PureComponent {
     inputPNK: PropTypes.string
   }
 
+  static defaultProps = { inputETH: '0', inputPNK: '0' }
+
   estimatePNK() {
     const { inputETH, bondingCurveTotals } = this.props
-    return weiBNToDecimalString(estimatePNK(inputETH,
-      bondingCurveTotals.data.totalETH, 
-      bondingCurveTotals.data.totalPNK, 
-      bondingCurveTotals.data.spread))
+    return weiBNToDecimalString(
+      estimatePNK(
+        inputETH,
+        bondingCurveTotals.data.totalETH,
+        bondingCurveTotals.data.totalPNK,
+        bondingCurveTotals.data.spread
+      )
+    )
   }
 
   estimateETH() {
     const { inputPNK, bondingCurveTotals } = this.props
-    return weiBNToDecimalString(estimateETH(inputPNK,
-      bondingCurveTotals.data.totalETH, 
-      bondingCurveTotals.data.totalPNK, 
-      bondingCurveTotals.data.spread))
+    return weiBNToDecimalString(
+      estimateETH(
+        inputPNK,
+        bondingCurveTotals.data.totalETH,
+        bondingCurveTotals.data.totalPNK,
+        bondingCurveTotals.data.spread
+      )
+    )
   }
 
   render() {
@@ -103,7 +116,7 @@ class BondingCurveForm extends PureComponent {
       buyPNKFromBondingCurveFormIsInvalid,
       sellPNKToBondingCurveFormIsInvalid,
       submitBuyPNKFromBondingCurveForm,
-      submitSellPNKToBondingCurveForm,
+      submitSellPNKToBondingCurveForm
     } = this.props
 
     return (
@@ -154,10 +167,16 @@ class BondingCurveForm extends PureComponent {
   } // render()
 }
 
-BondingCurveForm = connect(
+export default connect(
   state => ({
-    inputETH: formValueSelector('buyPNKFromBondingCurveForm')(state, 'amountOfETH'),
-    inputPNK: formValueSelector('sellPNKToBondingCurveForm')(state, 'amountOfPNK'),
+    inputETH: formValueSelector('buyPNKFromBondingCurveForm')(
+      state,
+      'amountOfETH'
+    ),
+    inputPNK: formValueSelector('sellPNKToBondingCurveForm')(
+      state,
+      'amountOfPNK'
+    ),
     buyPNKFromBondingCurveFormIsInvalid: getBuyPNKFromBondingCurveFormIsInvalid(
       state
     ),
@@ -172,8 +191,6 @@ BondingCurveForm = connect(
     submitBuyPNKFromBondingCurveForm
   }
 )(BondingCurveForm)
-
-export { BondingCurveForm }
 
 const SPREAD_DIVISOR = toBN(10000) // Must be kept in sync with the bonding curve contract
 

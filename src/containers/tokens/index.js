@@ -40,7 +40,7 @@ import {
   WithdrawPNKFormIsInvalid,
   submitWithdrawPNKForm
 } from './components/withdraw-pnk-form'
-import { BondingCurveForm } from './components/bonding-curve-form'
+import BondingCurveForm from './components/bonding-curve-form'
 
 import './tokens.css'
 
@@ -80,7 +80,7 @@ class Tokens extends PureComponent {
 
     // passPeriodForm
     passPeriodFormIsInvalid: PropTypes.bool.isRequired,
-    submitPassPeriodForm: PropTypes.func.isRequired,
+    submitPassPeriodForm: PropTypes.func.isRequired
   }
 
   state = {
@@ -155,7 +155,8 @@ class Tokens extends PureComponent {
   }
 
   handleToggleBondingCurveForm = event => {
-    this.setState({ showBondingCurveForm: !this.state.showBondingCurveForm })
+    const { showBondingCurveForm } = this.state
+    this.setState({ showBondingCurveForm: showBondingCurveForm })
     event.preventDefault()
   }
 
@@ -223,7 +224,8 @@ class Tokens extends PureComponent {
                 <br />
                 <small>
                   If you don't have PNK, you can buy some from{' '}
-                  <a onClick={this.handleToggleBondingCurveForm}>here</a> or from{' '}
+                  <a onClick={this.handleToggleBondingCurveForm}>here</a> or
+                  from{' '}
                   <a
                     href="https://idex.market/eth/pnk"
                     target="_blank"

@@ -1,7 +1,8 @@
 import { BN } from 'ethjs'
-import { takeLatest, call, select, all } from 'redux-saga/effects'
 import ContractImplementation from 'kleros-api/lib/contracts/ContractImplementation'
 import MiniMePinakion from 'kleros-api/lib/contracts/implementations/PNK/MiniMePinakion'
+
+import { takeLatest, call, select, all } from 'redux-saga/effects'
 
 import bondingCurveArtifact from '../assets/contracts/BondingCurve'
 import { eth, BONDING_CURVE_ADDRESS } from '../bootstrap/dapp-api'
@@ -15,15 +16,18 @@ import { lessduxSaga } from '../utils/saga'
  * mounts, so we can't bind a module level variable to a BondingCurve instance.
  * @returns {BondingCurve} The BondingCurve instance.
  */
-const getBondingCurve = (function () {
-  var bondingCurve;
-  return function () {
+const getBondingCurve = (function() {
+  var bondingCurve
+  return function() {
     if (!bondingCurve) {
-      bondingCurve = new BondingCurve(eth.currentProvider, BONDING_CURVE_ADDRESS)
+      bondingCurve = new BondingCurve(
+        eth.currentProvider,
+        BONDING_CURVE_ADDRESS
+      )
     }
-    return bondingCurve;
+    return bondingCurve
   }
-}())
+})()
 
 /**
  * Fetch reserve parameters of the bonding curve.

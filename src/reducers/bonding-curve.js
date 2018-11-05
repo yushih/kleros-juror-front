@@ -14,8 +14,6 @@ const {
 )
 export { bondingCurveTotalsShape }
 
-export default createReducer(
-  {
-    bondingCurveTotals: bondingCurveInitialState,
-  }
-)
+export default createReducer({
+  bondingCurveTotals: bondingCurveInitialState
+})
